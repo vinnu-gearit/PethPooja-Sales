@@ -18,10 +18,12 @@ load_dotenv()
 app = FastAPI()
 
 # MongoDB Connection
-MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
+# MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
+MONGODB_URI = "mongodb+srv://PethPooja:KCCollege%4067@pethpooja.bhkjm.mongodb.net/"
 client = MongoClient(MONGODB_URI)
 db = client["PethPooja"]
 collection = db["Sales"]
+
 
 # Define data models
 class Restaurant(BaseModel):
