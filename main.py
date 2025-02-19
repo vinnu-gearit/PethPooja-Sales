@@ -18,8 +18,7 @@ load_dotenv()
 app = FastAPI()
 
 # MongoDB Connection
-# MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
-MONGODB_URI = "mongodb+srv://PethPooja:KCCollege%4067@pethpooja.bhkjm.mongodb.net/"
+MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
 client = MongoClient(MONGODB_URI)
 db = client["PethPooja"]
 collection = db["Sales"]
