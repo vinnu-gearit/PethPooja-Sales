@@ -5,6 +5,7 @@ from pymongo import MongoClient
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+import uvicorn
 
 # Load environment variables from .env file (for local development)
 load_dotenv()
@@ -108,3 +109,14 @@ async def get_all_sales_data():
 @app.get("/")
 async def root():
     return {"message": "Welcome to the Sales Data API"}
+
+
+
+# @app.get("/")
+# def read_root():
+#     return {"message": "Hello, Railway!"}
+
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))  # Change 8000 to use $PORT
