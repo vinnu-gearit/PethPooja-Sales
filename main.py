@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+import logging
+import time
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from typing import List, Optional
 from pymongo import MongoClient
@@ -6,6 +8,8 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 import uvicorn
+import logging
+
 
 # Load environment variables from .env file (for local development)
 load_dotenv()
@@ -105,18 +109,41 @@ async def get_all_sales_data():
     data = list(collection.find({}, {"_id": 0}))  # Exclude MongoDB _id field
     return data
 
-# Add a root endpoint for testing
+# # Add a root endpoint for testing
+# @app.get("/")
+# async def root():
+#     return {"message": "Welcome to the Sales Data API"}
+
+
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
+
+# Middleware for logging requests
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+    
+    # Log request details
+    body = await request.body()
+    logger.info(f"Request: {request.method} {request.url} - Body: {body.decode()}")
+    
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    
+    # Log response details
+    logger.info(f"Response: {response.status_code} - Time taken: {process_time:.2f}s")
+    
+    return response
+
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the Sales Data API"}
+    return {"message": "Hello World"}
 
 
 
-# @app.get("/")
-# def read_root():
-#     return {"message": "Hello, Railway!"}
-
-
+# import uvicorn
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)  # Change 8000 to use $PORT
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, log_level="debug")
